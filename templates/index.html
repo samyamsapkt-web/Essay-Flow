@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EssayFlow — Write Better Essays</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <div class="bg-glow g1"></div>
+  <div class="bg-glow g2"></div>
+
+  <div class="app">
+
+    <header class="header">
+      <div class="brand">
+        <div class="brand-icon">✦</div>
+        <div>
+          <div class="brand-name">Essay<span>Flow</span></div>
+          <div class="brand-sub">AI Writing Assistant</div>
+        </div>
+      </div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="modeOutline">Get Outline</button>
+        <button class="mode-btn" id="modeGrade">Check Grade</button>
+      </div>
+    </header>
+
+    <div class="hero">
+      <div class="hero-tag" id="heroTag">Stage 1 — Before You Write</div>
+      <h1 class="hero-title" id="heroTitle">Turn your prompt into<br/><em>a perfect outline.</em></h1>
+      <p class="hero-desc" id="heroDesc">Paste your assignment prompt and get thesis options, a full outline, and exactly what your teacher is looking for — in seconds.</p>
+    </div>
+
+    <div class="input-card">
+
+      <div class="input-row">
+        <label class="input-label">Grade Level <span class="optional">(optional)</span></label>
+        <div class="grade-chips" id="gradeChips">
+          <button class="chip" data-grade="6">6</button>
+          <button class="chip" data-grade="7">7</button>
+          <button class="chip" data-grade="8">8</button>
+          <button class="chip" data-grade="9">9</button>
+          <button class="chip" data-grade="10">10</button>
+          <button class="chip" data-grade="11">11</button>
+          <button class="chip" data-grade="12">12</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="input-row">
+        <label class="input-label" for="promptInput">Assignment Prompt <span class="required">*</span></label>
+        <textarea id="promptInput" class="textarea" placeholder="Paste your assignment prompt here... e.g. 'Write a 5-paragraph essay analyzing the causes of World War I. Include at least 3 primary causes and discuss their interconnections.'" rows="5"></textarea>
+      </div>
+
+      <div id="essayRow" class="hidden">
+        <div class="divider"></div>
+        <div class="input-row">
+          <label class="input-label" for="essayInput">Your Essay Draft <span class="required">*</span></label>
+          <textarea id="essayInput" class="textarea" placeholder="Paste your completed essay draft here..." rows="8"></textarea>
+        </div>
+      </div>
+
+      <div class="input-footer">
+        <div class="char-count" id="charCount">0 characters</div>
+        <button class="analyze-btn" id="analyzeBtn" disabled>
+          <span id="analyzeBtnText">Generate Outline</span>
+          <span class="analyze-arrow">✦</span>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="status-wrap hidden" id="statusWrap">
+      <div class="status-pill">
+        <div class="status-spinner"></div>
+        <span id="statusText">Analyzing your prompt...</span>
+      </div>
+    </div>
+
+    <div class="error-wrap hidden" id="errorWrap">
+      <div class="error-pill">⚠ <span id="errorText"></span></div>
+    </div>
+
+    <div class="results hidden" id="results">
+
+      <div class="grade-prediction hidden" id="gradePrediction">
+        <div class="prediction-col">
+          <div class="prediction-label">Predicted Grade</div>
+          <div class="prediction-grade" id="predGrade">—</div>
+          <div class="prediction-pct" id="predPct"></div>
+        </div>
+        <div class="prediction-arrow">→</div>
+        <div class="prediction-col">
+          <div class="prediction-label">After Fixes</div>
+          <div class="prediction-potential" id="predPotential">—</div>
+          <div class="prediction-pct" id="predPotentialPct"></div>
+        </div>
+      </div>
+
+      <div class="result-block" id="thesisBlock">
+        <div class="result-block-header">
+          <span class="block-num">01</span>
+          <div>
+            <div class="block-title">Thesis Options</div>
+            <div class="block-sub">Pick one, or use them as inspiration</div>
+          </div>
+        </div>
+        <div class="thesis-list" id="thesisList"></div>
+      </div>
+
+      <div class="result-block" id="outlineBlock">
+        <div class="result-block-header">
+          <span class="block-num">02</span>
+          <div>
+            <div class="block-title">Essay Outline</div>
+            <div class="block-sub">Your roadmap from intro to conclusion</div>
+          </div>
+        </div>
+        <div class="outline-wrap">
+          <div class="outline-section">
+            <div class="outline-tag intro-tag">Introduction</div>
+            <p class="outline-text" id="outlineIntro"></p>
+          </div>
+          <div id="outlineBodyWrap"></div>
+          <div class="outline-section">
+            <div class="outline-tag conclusion-tag">Conclusion</div>
+            <p class="outline-text" id="outlineConclusion"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-block" id="teacherBlock">
+        <div class="result-block-header">
+          <span class="block-num">03</span>
+          <div>
+            <div class="block-title">What Your Teacher Wants</div>
+            <div class="block-sub">Key expectations to hit for a top grade</div>
+          </div>
+        </div>
+        <div class="checklist" id="teacherList"></div>
+      </div>
+
+      <div class="result-block hidden" id="strengthsBlock">
+        <div class="result-block-header">
+          <span class="block-num">04</span>
+          <div>
+            <div class="block-title">What's Working</div>
+            <div class="block-sub">Keep these strengths in your revision</div>
+          </div>
+        </div>
+        <p class="prose-text" id="strengthsText"></p>
+      </div>
+
+      <div class="result-block hidden" id="weaknessesBlock">
+        <div class="result-block-header">
+          <span class="block-num">05</span>
+          <div>
+            <div class="block-title">What's Holding You Back</div>
+            <div class="block-sub">The issues dragging your grade down</div>
+          </div>
+        </div>
+        <p class="prose-text" id="weaknessesText"></p>
+      </div>
+
+      <div class="result-block hidden" id="fixesBlock">
+        <div class="result-block-header">
+          <span class="block-num">06</span>
+          <div>
+            <div class="block-title">Specific Fixes</div>
+            <div class="block-sub">Make these changes before submitting</div>
+          </div>
+        </div>
+        <div class="fixes-list" id="fixesList"></div>
+      </div>
+
+      <div class="result-block" id="tipsBlock">
+        <div class="result-block-header">
+          <span class="block-num" id="tipsNum">04</span>
+          <div>
+            <div class="block-title">Tips for Success</div>
+            <div class="block-sub">Extra advice to maximize your grade</div>
+          </div>
+        </div>
+        <div class="tips-list" id="tipsList"></div>
+      </div>
+
+      <button class="try-again-btn" id="tryAgainBtn">↺ Analyze Another Essay</button>
+
+    </div>
+
+  </div>
+
+  <script src="/static/main.js"></script>
+</body>
+</html>
